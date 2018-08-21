@@ -118,7 +118,7 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 
 
 var bind = __webpack_require__(72);
-var isBuffer = __webpack_require__(168);
+var isBuffer = __webpack_require__(169);
 
 /*global toString:true*/
 
@@ -1462,7 +1462,7 @@ module.exports = function (it) {
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isDate = __webpack_require__(199)
+var isDate = __webpack_require__(200)
 
 var MILLISECONDS_IN_HOUR = 3600000
 var MILLISECONDS_IN_MINUTE = 60000
@@ -2368,7 +2368,7 @@ var hyphenate = exports.hyphenate = memoizeString(function (str) {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(3);
-var normalizeHeaderName = __webpack_require__(170);
+var normalizeHeaderName = __webpack_require__(171);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -3024,15 +3024,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.hasClassInParent = exports.formatErrorMsg = exports.getMetaContent = exports.axiosGithub = exports.axiosJSON = exports.queryStringify = exports.queryParse = undefined;
 
-var _keys = __webpack_require__(156);
+var _keys = __webpack_require__(157);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _slicedToArray2 = __webpack_require__(159);
+var _slicedToArray2 = __webpack_require__(160);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _axios = __webpack_require__(166);
+var _axios = __webpack_require__(167);
 
 var _axios2 = _interopRequireDefault(_axios);
 
@@ -3148,12 +3148,12 @@ module.exports = function bind(fn, thisArg) {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(3);
-var settle = __webpack_require__(171);
-var buildURL = __webpack_require__(173);
-var parseHeaders = __webpack_require__(174);
-var isURLSameOrigin = __webpack_require__(175);
+var settle = __webpack_require__(172);
+var buildURL = __webpack_require__(174);
+var parseHeaders = __webpack_require__(175);
+var isURLSameOrigin = __webpack_require__(176);
 var createError = __webpack_require__(74);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(176);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(177);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -3250,7 +3250,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(177);
+      var cookies = __webpack_require__(178);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -3335,7 +3335,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(172);
+var enhanceError = __webpack_require__(173);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -3443,7 +3443,7 @@ exports.default = function (_ref) {
     "span",
     { className: "gt-ico " + className },
     _react2.default.createElement("span", { className: "gt-svg", dangerouslySetInnerHTML: {
-        __html: __webpack_require__(188)("./" + name + ".svg")
+        __html: __webpack_require__(189)("./" + name + ".svg")
       } }),
     text && _react2.default.createElement(
       "span",
@@ -6017,7 +6017,7 @@ var _i18n = __webpack_require__(148);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-__webpack_require__(155);
+__webpack_require__(156);
 
 var _util = __webpack_require__(71);
 
@@ -6025,15 +6025,15 @@ var _avatar = __webpack_require__(77);
 
 var _avatar2 = _interopRequireDefault(_avatar);
 
-var _button = __webpack_require__(185);
+var _button = __webpack_require__(186);
 
 var _button2 = _interopRequireDefault(_button);
 
-var _action = __webpack_require__(186);
+var _action = __webpack_require__(187);
 
 var _action2 = _interopRequireDefault(_action);
 
-var _comment = __webpack_require__(187);
+var _comment = __webpack_require__(188);
 
 var _comment2 = _interopRequireDefault(_comment);
 
@@ -6041,9 +6041,9 @@ var _svg = __webpack_require__(78);
 
 var _svg2 = _interopRequireDefault(_svg);
 
-var _const = __webpack_require__(214);
+var _const = __webpack_require__(216);
 
-var _getComments = __webpack_require__(215);
+var _getComments = __webpack_require__(217);
 
 var _getComments2 = _interopRequireDefault(_getComments);
 
@@ -6066,6 +6066,7 @@ var GitalkComponent = function (_Component) {
       page: 1,
       pagerDirection: 'last',
       cursor: null,
+      previewHtml: '',
 
       isNoInit: false,
       isIniting: true,
@@ -6076,6 +6077,7 @@ var GitalkComponent = function (_Component) {
       isIssueCreating: false,
       isPopupVisible: false,
       isInputFocused: false,
+      isPreview: false,
 
       isOccurError: false,
       errorMsg: ''
@@ -6189,6 +6191,27 @@ var GitalkComponent = function (_Component) {
       });
     };
 
+    _this.handleCommentPreview = function (e) {
+      _this.setState({
+        isPreview: !_this.state.isPreview
+      });
+
+      _util.axiosGithub.post('/markdown', {
+        text: _this.state.comment
+      }, {
+        headers: _this.accessToken && { Authorization: 'token ' + _this.accessToken }
+      }).then(function (res) {
+        _this.setState({
+          previewHtml: res.data
+        });
+      }).catch(function (err) {
+        _this.setState({
+          isOccurError: true,
+          errorMsg: (0, _util.formatErrorMsg)(err)
+        });
+      });
+    };
+
     _this.handleCommentLoad = function () {
       var _this$state2 = _this.state,
           issue = _this$state2.issue,
@@ -6241,6 +6264,7 @@ var GitalkComponent = function (_Component) {
 
     _this.options = (0, _assign2.default)({}, {
       id: location.href,
+      number: -1,
       labels: ['Gitalk'],
       title: document.title,
       body: '', // location.href + header.meta[description]
@@ -6258,7 +6282,15 @@ var GitalkComponent = function (_Component) {
       },
       enableHotKey: true,
 
-      url: location.href
+      url: location.href,
+
+      defaultAuthor: {
+        avatarUrl: '//avatars1.githubusercontent.com/u/29697133?s=50',
+        login: 'null',
+        url: ''
+      },
+
+      updateCountCallback: null
     }, props.options);
 
     _this.state.pagerDirection = _this.options.pagerDirection;
@@ -6361,10 +6393,87 @@ var GitalkComponent = function (_Component) {
       });
     }
   }, {
-    key: 'getIssue',
-    value: function getIssue() {
+    key: 'getIssueById',
+    value: function getIssueById() {
       var _this4 = this;
 
+      var _options = this.options,
+          owner = _options.owner,
+          repo = _options.repo,
+          number = _options.number,
+          clientID = _options.clientID,
+          clientSecret = _options.clientSecret;
+
+      var getUrl = '/repos/' + owner + '/' + repo + '/issues/' + number;
+
+      return new _promise2.default(function (resolve, reject) {
+        _util.axiosGithub.get(getUrl, {
+          params: {
+            client_id: clientID,
+            client_secret: clientSecret,
+            t: Date.now()
+          }
+        }).then(function (res) {
+          var issue = null;
+
+          if (res && res.data && res.data.number === number) {
+            issue = res.data;
+
+            _this4.setState({ issue: issue, isNoInit: false });
+          }
+          resolve(issue);
+        }).catch(function (err) {
+          // When the status code is 404, promise will be resolved with null
+          if (err.response.status === 404) resolve(null);
+          reject(err);
+        });
+      });
+    }
+  }, {
+    key: 'getIssueByLabels',
+    value: function getIssueByLabels() {
+      var _this5 = this;
+
+      var _options2 = this.options,
+          owner = _options2.owner,
+          repo = _options2.repo,
+          id = _options2.id,
+          labels = _options2.labels,
+          clientID = _options2.clientID,
+          clientSecret = _options2.clientSecret;
+
+
+      return _util.axiosGithub.get('/repos/' + owner + '/' + repo + '/issues', {
+        params: {
+          client_id: clientID,
+          client_secret: clientSecret,
+          labels: labels.concat(id).join(','),
+          t: Date.now()
+        }
+      }).then(function (res) {
+        var createIssueManually = _this5.options.createIssueManually;
+
+        var isNoInit = false;
+        var issue = null;
+        if (!(res && res.data && res.data.length)) {
+          if (!createIssueManually && _this5.isAdmin) {
+            return _this5.createIssue();
+          }
+
+          isNoInit = true;
+        } else {
+          issue = res.data[0];
+        }
+        _this5.setState({ issue: issue, isNoInit: isNoInit });
+        return issue;
+      });
+    }
+  }, {
+    key: 'getIssue',
+    value: function getIssue() {
+      var _this6 = this;
+
+      var number = this.options.number;
       var issue = this.state.issue;
 
       if (issue) {
@@ -6372,46 +6481,18 @@ var GitalkComponent = function (_Component) {
         return _promise2.default.resolve(issue);
       }
 
-      var _options = this.options,
-          owner = _options.owner,
-          repo = _options.repo,
-          id = _options.id,
-          labels = _options.labels,
-          clientID = _options.clientID,
-          clientSecret = _options.clientSecret;
-
-
-      return _util.axiosGithub.get('/repos/' + owner + '/' + repo + '/issues', {
-        params: {
-          client_id: clientID,
-          client_secret: clientSecret,
-          labels: labels.concat(id).join(',')
-        }
-      }).then(function (res) {
-        var _options2 = _this4.options,
-            admin = _options2.admin,
-            createIssueManually = _options2.createIssueManually;
-        var user = _this4.state.user;
-
-        var isNoInit = false;
-        var issue = null;
-        if (!(res && res.data && res.data.length)) {
-          if (!createIssueManually && _this4.isAdmin) {
-            return _this4.createIssue();
-          }
-
-          isNoInit = true;
-        } else {
-          issue = res.data[0];
-        }
-        _this4.setState({ issue: issue, isNoInit: isNoInit });
-        return issue;
-      });
+      if (typeof number === 'number' && number > 0) {
+        return this.getIssueById().then(function (resIssue) {
+          if (!resIssue) return _this6.getIssueByLabels();
+          return resIssue;
+        });
+      }
+      return this.getIssueByLabels();
     }
   }, {
     key: 'createIssue',
     value: function createIssue() {
-      var _this5 = this;
+      var _this7 = this;
 
       var _options3 = this.options,
           owner = _options3.owner,
@@ -6431,7 +6512,7 @@ var GitalkComponent = function (_Component) {
           Authorization: 'token ' + this.accessToken
         }
       }).then(function (res) {
-        _this5.setState({ issue: res.data });
+        _this7.setState({ issue: res.data });
         return res.data;
       });
     }
@@ -6448,7 +6529,7 @@ var GitalkComponent = function (_Component) {
   }, {
     key: 'createComment',
     value: function createComment() {
-      var _this6 = this;
+      var _this8 = this;
 
       var _state = this.state,
           comment = _state.comment,
@@ -6462,11 +6543,11 @@ var GitalkComponent = function (_Component) {
         }, {
           headers: {
             Accept: 'application/vnd.github.v3.full+json',
-            Authorization: 'token ' + _this6.accessToken
+            Authorization: 'token ' + _this8.accessToken
           }
         });
       }).then(function (res) {
-        _this6.setState({
+        _this8.setState({
           comment: '',
           comments: comments.concat(res.data),
           localComments: localComments.concat(res.data)
@@ -6482,7 +6563,7 @@ var GitalkComponent = function (_Component) {
   }, {
     key: 'reply',
     value: function reply(replyComment) {
-      var _this7 = this;
+      var _this9 = this;
 
       var comment = this.state.comment;
 
@@ -6496,14 +6577,14 @@ var GitalkComponent = function (_Component) {
       replyCommentArray.push('');
       if (comment) replyCommentArray.unshift('');
       this.setState({ comment: comment + replyCommentArray.join('\n') }, function () {
-        _autosize2.default.update(_this7.commentEL);
-        _this7.commentEL.focus();
+        _autosize2.default.update(_this9.commentEL);
+        _this9.commentEL.focus();
       });
     }
   }, {
     key: 'like',
     value: function like(comment) {
-      var _this8 = this;
+      var _this10 = this;
 
       var _options4 = this.options,
           owner = _options4.owner,
@@ -6540,7 +6621,7 @@ var GitalkComponent = function (_Component) {
           return c;
         });
 
-        _this8.setState({
+        _this10.setState({
           comments: comments
         });
       });
@@ -6548,7 +6629,7 @@ var GitalkComponent = function (_Component) {
   }, {
     key: 'unLike',
     value: function unLike(comment) {
-      var _this9 = this;
+      var _this11 = this;
 
       var _state3 = this.state,
           comments = _state3.comments,
@@ -6595,7 +6676,7 @@ var GitalkComponent = function (_Component) {
             return c;
           });
 
-          _this9.setState({
+          _this11.setState({
             comments: comments
           });
         }
@@ -6652,12 +6733,14 @@ var GitalkComponent = function (_Component) {
   }, {
     key: 'header',
     value: function header() {
-      var _this10 = this;
+      var _this12 = this;
 
       var _state5 = this.state,
           user = _state5.user,
           comment = _state5.comment,
-          isCreating = _state5.isCreating;
+          isCreating = _state5.isCreating,
+          previewHtml = _state5.previewHtml,
+          isPreview = _state5.isPreview;
 
       return _react2.default.createElement(
         'div',
@@ -6672,15 +6755,19 @@ var GitalkComponent = function (_Component) {
           { className: 'gt-header-comment' },
           _react2.default.createElement('textarea', {
             ref: function ref(t) {
-              _this10.commentEL = t;
+              _this12.commentEL = t;
             },
-            className: 'gt-header-textarea',
+            className: 'gt-header-textarea ' + (isPreview ? 'hide' : ''),
             value: comment,
             onChange: this.handleCommentChange,
             onFocus: this.handleCommentFocus,
             onBlur: this.handleCommentBlur,
             onKeyDown: this.handleCommentKeyDown,
             placeholder: this.i18n.t('leave-a-comment')
+          }),
+          _react2.default.createElement('div', {
+            className: 'gt-header-preview markdown-body ' + (isPreview ? '' : 'hide'),
+            dangerouslySetInnerHTML: { __html: previewHtml }
           }),
           _react2.default.createElement(
             'div',
@@ -6697,6 +6784,12 @@ var GitalkComponent = function (_Component) {
               text: this.i18n.t('comment'),
               isLoading: isCreating
             }),
+            _react2.default.createElement(_button2.default, {
+              className: 'gt-btn-preview',
+              onMouseDown: this.handleCommentPreview,
+              text: isPreview ? this.i18n.t('edit') : this.i18n.t('preview')
+              // isLoading={isPreviewing}
+            }),
             !user && _react2.default.createElement(_button2.default, { className: 'gt-btn-login', onMouseDown: this.handleLogin, text: this.i18n.t('login-with-github') })
           )
         )
@@ -6705,7 +6798,7 @@ var GitalkComponent = function (_Component) {
   }, {
     key: 'comments',
     value: function comments() {
-      var _this11 = this;
+      var _this13 = this;
 
       var _state6 = this.state,
           user = _state6.user,
@@ -6725,7 +6818,7 @@ var GitalkComponent = function (_Component) {
 
       var counter = $(".gitalk-comment-count");
       if (counter && counter.attr("itemprop") == "commentCount") {
-        counter.html(window.GITALK_COMMENTS_COUNT + " Comments");
+        counter.html(window.GITALK_COMMENTS_COUNT);
       }
 
       return _react2.default.createElement(
@@ -6740,10 +6833,10 @@ var GitalkComponent = function (_Component) {
               key: c.id,
               user: user,
               language: language,
-              commentedText: _this11.i18n.t('commented'),
+              commentedText: _this13.i18n.t('commented'),
               admin: admin,
-              replyCallback: _this11.reply.bind(_this11, c),
-              likeCallback: c.reactions && c.reactions.viewerHasReacted ? _this11.unLike.bind(_this11, c) : _this11.like.bind(_this11, c)
+              replyCallback: _this13.reply.bind(_this13, c),
+              likeCallback: c.reactions && c.reactions.viewerHasReacted ? _this13.unLike.bind(_this13, c) : _this13.like.bind(_this13, c)
             });
           })
         ),
@@ -6771,8 +6864,17 @@ var GitalkComponent = function (_Component) {
 
       var cnt = (issue && issue.comments) + localComments.length;
       var isDesc = pagerDirection === 'last';
+      var updateCountCallback = this.options.updateCountCallback;
+
 
       window.GITALK_COMMENTS_COUNT = cnt;
+      if (updateCountCallback && {}.toString.call(updateCountCallback) === '[object Function]') {
+        try {
+          updateCountCallback(cnt);
+        } catch (err) {
+          console.log('An error occurred executing the updateCountCallback:', err);
+        }
+      }
 
       return _react2.default.createElement(
         'div',
@@ -10015,6 +10117,10 @@ var _fr = __webpack_require__(154);
 
 var _fr2 = _interopRequireDefault(_fr);
 
+var _ru = __webpack_require__(155);
+
+var _ru2 = _interopRequireDefault(_ru);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var i18nMap = {
@@ -10023,7 +10129,8 @@ var i18nMap = {
   'zh-TW': _zhTW2.default,
   'en': _en2.default,
   'es-ES': _esES2.default,
-  'fr': _fr2.default
+  'fr': _fr2.default,
+  'ru': _ru2.default
 };
 
 /***/ }),
@@ -10338,54 +10445,60 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     (c) 2012 
 /* 150 */
 /***/ (function(module, exports) {
 
-module.exports = {"init":"Gitalk 加载中 ...","no-found-related":"未找到相关的 %{link} 进行评论","please-contact":"请联系 %{user} 初始化创建","init-issue":"初始化 Issue","leave-a-comment":"说点什么","comment":"评论","support-markdown":"支持 Markdown 语法","login-with-github":"使用 Github 登录","first-comment-person":"来做第一个留言的人吧！","commented":"发表于","load-more":"加载更多","power":"由 %{link} 驱动","counts":"%{counts} 条评论","sort-asc":"从旧到新排序","sort-desc":"从新到旧排序","logout":"注销","anonymous":"未登录用户"}
+module.exports = {"init":"Gitalk 加载中 ...","no-found-related":"未找到相关的 %{link} 进行评论","please-contact":"请联系 %{user} 初始化创建","init-issue":"初始化 Issue","leave-a-comment":"说点什么","preview":"预览","edit":"编辑","comment":"评论","support-markdown":"支持 Markdown 语法","login-with-github":"使用 GitHub 登录","first-comment-person":"来做第一个留言的人吧！","commented":"发表于","load-more":"加载更多","counts":"%{counts} 条评论","sort-asc":"从旧到新排序","sort-desc":"从新到旧排序","logout":"注销","anonymous":"未登录用户"}
 
 /***/ }),
 /* 151 */
 /***/ (function(module, exports) {
 
-module.exports = {"init":"Gitalk 加載中 ...","no-found-related":"未找到相關的 %{link} 進行評論","please-contact":"請聯系 %{user} 初始化創建","init-issue":"初始化 Issue","leave-a-comment":"說點什麽","comment":"評論","support-markdown":"支持 Markdown 語法","login-with-github":"使用 Github 登錄","first-comment-person":"來做第一個留言的人吧！","commented":"發表於","load-more":"加載更多","power":"由 %{link} 驅動","counts":"%{counts} 條評論","sort-asc":"從舊到新排序","sort-desc":"從新到舊排序","logout":"註銷","anonymous":"未登錄用戶"}
+module.exports = {"init":"Gitalk 載入中…","no-found-related":"未找到相關的 %{link}","please-contact":"請聯絡 %{user} 初始化評論","init-issue":"初始化 Issue","leave-a-comment":"寫點什麼","preview":"預覽","edit":"編輯","comment":"評論","support-markdown":"支援 Markdown 語法","login-with-github":"使用 GitHub 登入","first-comment-person":"成為首個留言的人吧！","commented":"評論於","load-more":"載入更多","counts":"%{counts} 筆評論","sort-asc":"從舊至新排序","sort-desc":"從新至舊排序","logout":"登出","anonymous":"訪客"}
 
 /***/ }),
 /* 152 */
 /***/ (function(module, exports) {
 
-module.exports = {"init":"Gitalking ...","no-found-related":"Related %{link} not found","please-contact":"Please contact %{user} to initialize the comment","init-issue":"Init Issue","leave-a-comment":"Leave a comment","comment":"Comment","support-markdown":"Markdown is supported","login-with-github":"Login with Github","first-comment-person":"Be the first guy leaving a comment!","commented":"commented","load-more":"Load more","power":"%{link} v1.0.0","counts":"%{counts} comment |||| %{counts} comments","sort-asc":"Sort by Oldest","sort-desc":"Sort by Latest","logout":"Logout","anonymous":"Anonymous"}
+module.exports = {"init":"Gitalking ...","no-found-related":"Related %{link} not found","please-contact":"Please contact %{user} to initialize the comment","init-issue":"Init Issue","leave-a-comment":"Leave a comment","preview":"Preview","edit":"Edit","comment":"Comment","support-markdown":"Markdown is supported","login-with-github":"Login with GitHub","first-comment-person":"Be the first guy leaving a comment!","commented":"commented","load-more":"Load more","counts":"%{counts} comment |||| %{counts} comments","sort-asc":"Sort by Oldest","sort-desc":"Sort by Latest","logout":"Logout","anonymous":"Anonymous"}
 
 /***/ }),
 /* 153 */
 /***/ (function(module, exports) {
 
-module.exports = {"init":"Gitalking ...","no-found-related":"Link %{link} no encontrado","please-contact":"Por favor contacta con %{user} para inicializar el comentario","init-issue":"Iniciar Issue","leave-a-comment":"Deja un comentario","comment":"Comentario","support-markdown":"Markdown es soportado","login-with-github":"Entrar con Github","first-comment-person":"Sé el primero en dejar un comentario!","commented":"comentó","load-more":"Cargar más","power":"%{link} v1.0.0","counts":"%{counts} comentario |||| %{counts} comentarios","sort-asc":"Ordenar por Antiguos","sort-desc":"Ordenar por Recientes","logout":"Salir","anonymous":"Anónimo"}
+module.exports = {"init":"Gitalking ...","no-found-related":"Link %{link} no encontrado","please-contact":"Por favor contacta con %{user} para inicializar el comentario","init-issue":"Iniciar Issue","leave-a-comment":"Deja un comentario","preview":"Avance","edit":"Editar","comment":"Comentario","support-markdown":"Markdown es soportado","login-with-github":"Entrar con GitHub","first-comment-person":"Sé el primero en dejar un comentario!","commented":"comentó","load-more":"Cargar más","counts":"%{counts} comentario |||| %{counts} comentarios","sort-asc":"Ordenar por Antiguos","sort-desc":"Ordenar por Recientes","logout":"Salir","anonymous":"Anónimo"}
 
 /***/ }),
 /* 154 */
 /***/ (function(module, exports) {
 
-module.exports = {"init":"Gitalking ...","no-found-related":"Lien %{link} non trouvé","please-contact":"S’il vous plaît contactez %{user} pour initialiser les commentaires","init-issue":"Initialisation des issues","leave-a-comment":"Laisser un commentaire","comment":"Commentaire","support-markdown":"Markdown est supporté","login-with-github":"Se connecter avec Github","first-comment-person":"Être le premier à laisser un commentaire !","commented":"commenter","load-more":"Charger plus","power":"%{link} v1.0.0","counts":"%{counts} commentaire |||| %{counts} commentaires","sort-asc":"Trier par plus ancien","sort-desc":"Trier par plus récent","logout":"Déconnexion","anonymous":"Anonyme"}
+module.exports = {"init":"Gitalking ...","no-found-related":"Lien %{link} non trouvé","please-contact":"S’il vous plaît contactez %{user} pour initialiser les commentaires","init-issue":"Initialisation des issues","leave-a-comment":"Laisser un commentaire","preview":"Aperçu","edit":"Modifier","comment":"Commentaire","support-markdown":"Markdown est supporté","login-with-github":"Se connecter avec GitHub","first-comment-person":"Être le premier à laisser un commentaire !","commented":"commenter","load-more":"Charger plus","counts":"%{counts} commentaire |||| %{counts} commentaires","sort-asc":"Trier par plus ancien","sort-desc":"Trier par plus récent","logout":"Déconnexion","anonymous":"Anonyme"}
 
 /***/ }),
 /* 155 */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
+module.exports = {"init":"Gitalking ...","no-found-related":"Связанные %{link} не найдены","please-contact":"Пожалуйста, свяжитесь с %{user} чтобы инициализировать комментарий","init-issue":"Выпуск инициализации","leave-a-comment":"Оставить комментарий","preview":"Предварительный просмотр","edit":"Pедактировать","comment":"Комментарий","support-markdown":"Поддерживается Markdown","login-with-github":"Вход через GitHub","first-comment-person":"Будьте первым, кто оставил комментарий","commented":"прокомментированный","load-more":"Загрузить ещё","counts":"%{counts} комментарий |||| %{counts} комментарьев","sort-asc":"Сортировать по старым","sort-desc":"Сортировать по последним","logout":"Выход","anonymous":"Анонимный"}
 
 /***/ }),
 /* 156 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = { "default": __webpack_require__(157), __esModule: true };
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(158);
+module.exports = { "default": __webpack_require__(158), __esModule: true };
+
+/***/ }),
+/* 158 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(159);
 module.exports = __webpack_require__(0).Object.keys;
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 Object.keys(O)
@@ -10400,7 +10513,7 @@ __webpack_require__(67)('keys', function () {
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10408,11 +10521,11 @@ __webpack_require__(67)('keys', function () {
 
 exports.__esModule = true;
 
-var _isIterable2 = __webpack_require__(160);
+var _isIterable2 = __webpack_require__(161);
 
 var _isIterable3 = _interopRequireDefault(_isIterable2);
 
-var _getIterator2 = __webpack_require__(163);
+var _getIterator2 = __webpack_require__(164);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -10457,22 +10570,22 @@ exports.default = function () {
 }();
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(161), __esModule: true };
+module.exports = { "default": __webpack_require__(162), __esModule: true };
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(27);
 __webpack_require__(19);
-module.exports = __webpack_require__(162);
+module.exports = __webpack_require__(163);
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var classof = __webpack_require__(41);
@@ -10488,22 +10601,22 @@ module.exports = __webpack_require__(0).isIterable = function (it) {
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(164), __esModule: true };
+module.exports = { "default": __webpack_require__(165), __esModule: true };
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(27);
 __webpack_require__(19);
-module.exports = __webpack_require__(165);
+module.exports = __webpack_require__(166);
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(6);
@@ -10516,13 +10629,13 @@ module.exports = __webpack_require__(0).getIterator = function (it) {
 
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(167);
+module.exports = __webpack_require__(168);
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10530,7 +10643,7 @@ module.exports = __webpack_require__(167);
 
 var utils = __webpack_require__(3);
 var bind = __webpack_require__(72);
-var Axios = __webpack_require__(169);
+var Axios = __webpack_require__(170);
 var defaults = __webpack_require__(48);
 
 /**
@@ -10565,14 +10678,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(76);
-axios.CancelToken = __webpack_require__(183);
+axios.CancelToken = __webpack_require__(184);
 axios.isCancel = __webpack_require__(75);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(184);
+axios.spread = __webpack_require__(185);
 
 module.exports = axios;
 
@@ -10581,7 +10694,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports) {
 
 /*!
@@ -10608,7 +10721,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10616,10 +10729,10 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(48);
 var utils = __webpack_require__(3);
-var InterceptorManager = __webpack_require__(178);
-var dispatchRequest = __webpack_require__(179);
-var isAbsoluteURL = __webpack_require__(181);
-var combineURLs = __webpack_require__(182);
+var InterceptorManager = __webpack_require__(179);
+var dispatchRequest = __webpack_require__(180);
+var isAbsoluteURL = __webpack_require__(182);
+var combineURLs = __webpack_require__(183);
 
 /**
  * Create a new instance of Axios
@@ -10701,7 +10814,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10720,7 +10833,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10753,7 +10866,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10781,7 +10894,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10856,7 +10969,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10900,7 +11013,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10975,7 +11088,7 @@ module.exports = (
 
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11018,7 +11131,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11078,7 +11191,7 @@ module.exports = (
 
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11137,14 +11250,14 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(3);
-var transformData = __webpack_require__(180);
+var transformData = __webpack_require__(181);
 var isCancel = __webpack_require__(75);
 var defaults = __webpack_require__(48);
 
@@ -11223,7 +11336,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11250,7 +11363,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11271,7 +11384,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11292,7 +11405,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11356,7 +11469,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11390,7 +11503,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11432,7 +11545,7 @@ exports.default = function (_ref) {
 };
 
 /***/ }),
-/* 186 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11464,7 +11577,7 @@ exports.default = function (_ref) {
 };
 
 /***/ }),
-/* 187 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11486,27 +11599,31 @@ var _svg = __webpack_require__(78);
 
 var _svg2 = _interopRequireDefault(_svg);
 
-var _distance_in_words_to_now = __webpack_require__(196);
+var _distance_in_words_to_now = __webpack_require__(197);
 
 var _distance_in_words_to_now2 = _interopRequireDefault(_distance_in_words_to_now);
 
-var _index = __webpack_require__(209);
+var _index = __webpack_require__(210);
 
 var _index2 = _interopRequireDefault(_index);
 
-var _index3 = __webpack_require__(210);
+var _index3 = __webpack_require__(211);
 
 var _index4 = _interopRequireDefault(_index3);
 
-var _index5 = __webpack_require__(211);
+var _index5 = __webpack_require__(212);
 
 var _index6 = _interopRequireDefault(_index5);
 
-var _index7 = __webpack_require__(212);
+var _index7 = __webpack_require__(213);
 
 var _index8 = _interopRequireDefault(_index7);
 
-__webpack_require__(213);
+var _index9 = __webpack_require__(214);
+
+var _index10 = _interopRequireDefault(_index9);
+
+__webpack_require__(215);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11514,12 +11631,14 @@ var ZHCN = (0, _index2.default)();
 var ZHTW = (0, _index4.default)();
 var ES = (0, _index6.default)();
 var FR = (0, _index8.default)();
+var RU = (0, _index10.default)();
 window.GT_i18n_distanceInWordsLocaleMap = {
   'zh': ZHCN,
   'zh-CN': ZHCN,
   'zh-TW': ZHTW,
   'es-ES': ES,
-  'fr': FR
+  'fr': FR,
+  'ru': RU
 };
 
 exports.default = function (_ref) {
@@ -11605,17 +11724,17 @@ exports.default = function (_ref) {
 };
 
 /***/ }),
-/* 188 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./arrow_down.svg": 189,
-	"./edit.svg": 190,
-	"./github.svg": 191,
-	"./heart.svg": 192,
-	"./heart_on.svg": 193,
-	"./reply.svg": 194,
-	"./tip.svg": 195
+	"./arrow_down.svg": 190,
+	"./edit.svg": 191,
+	"./github.svg": 192,
+	"./heart.svg": 193,
+	"./heart_on.svg": 194,
+	"./reply.svg": 195,
+	"./tip.svg": 196
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -11631,55 +11750,55 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 188;
-
-/***/ }),
-/* 189 */
-/***/ (function(module, exports) {
-
-module.exports = "<svg viewBox=\"0 0 1024 1024\" xmlns=\"http://www.w3.org/2000/svg\" p-id=\"1619\"><path d=\"M511.872 676.8c-0.003 0-0.006 0-0.008 0-9.137 0-17.379-3.829-23.21-9.97l-251.277-265.614c-5.415-5.72-8.743-13.464-8.744-21.984 0-17.678 14.33-32.008 32.008-32.008 9.157 0 17.416 3.845 23.25 10.009l228.045 241.103 228.224-241.088c5.855-6.165 14.113-10.001 23.266-10.001 8.516 0 16.256 3.32 21.998 8.736 12.784 12.145 13.36 32.434 1.264 45.233l-251.52 265.6c-5.844 6.155-14.086 9.984-23.223 9.984-0.025 0-0.051 0-0.076 0z\" p-id=\"1620\"></path></svg>"
+webpackContext.id = 189;
 
 /***/ }),
 /* 190 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewBox=\"0 0 1024 1024\" xmlns=\"http://www.w3.org/2000/svg\">\n  <path d=\"M785.333333 85.333333C774.666667 85.333333 763.2 90.133333 754.666667 98.666667L682.666667 170.666667 853.333333 341.333333 925.333333 269.333333C942.4 252.266667 942.4 222.133333 925.333333 209.333333L814.666667 98.666667C806.133333 90.133333 796 85.333333 785.333333 85.333333zM640 217.333333 85.333333 768 85.333333 938.666667 256 938.666667 806.666667 384 640 217.333333z\"></path>\n</svg>\n"
+module.exports = "<svg viewBox=\"0 0 1024 1024\" xmlns=\"http://www.w3.org/2000/svg\" p-id=\"1619\"><path d=\"M511.872 676.8c-0.003 0-0.006 0-0.008 0-9.137 0-17.379-3.829-23.21-9.97l-251.277-265.614c-5.415-5.72-8.743-13.464-8.744-21.984 0-17.678 14.33-32.008 32.008-32.008 9.157 0 17.416 3.845 23.25 10.009l228.045 241.103 228.224-241.088c5.855-6.165 14.113-10.001 23.266-10.001 8.516 0 16.256 3.32 21.998 8.736 12.784 12.145 13.36 32.434 1.264 45.233l-251.52 265.6c-5.844 6.155-14.086 9.984-23.223 9.984-0.025 0-0.051 0-0.076 0z\" p-id=\"1620\"></path></svg>"
 
 /***/ }),
 /* 191 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n  <path d=\"M64 524C64 719.602 189.356 885.926 364.113 947.017 387.65799 953 384 936.115 384 924.767L384 847.107C248.118 863.007 242.674 773.052 233.5 758.001 215 726.501 171.5 718.501 184.5 703.501 215.5 687.501 247 707.501 283.5 761.501 309.956 800.642 361.366 794.075 387.658 787.497 393.403 763.997 405.637 743.042 422.353 726.638 281.774 701.609 223 615.67 223 513.5 223 464.053 239.322 418.406 271.465 381.627 251.142 320.928 273.421 269.19 276.337 261.415 334.458 256.131 394.888 302.993 399.549 306.685 432.663 297.835 470.341 293 512.5 293 554.924 293 592.81 297.896 626.075 306.853 637.426 298.219 693.46 258.054 747.5 262.966 750.382 270.652 772.185 321.292 753.058 381.083 785.516 417.956 802 463.809 802 513.5 802 615.874 742.99 701.953 601.803 726.786 625.381 750.003 640 782.295 640 818.008L640 930.653C640.752 939.626 640 948.664978 655.086 948.665 832.344 888.962 960 721.389 960 524 960 276.576 759.424 76 512 76 264.577 76 64 276.576 64 524Z\"></path>\n</svg>\n"
+module.exports = "<svg viewBox=\"0 0 1024 1024\" xmlns=\"http://www.w3.org/2000/svg\">\n  <path d=\"M785.333333 85.333333C774.666667 85.333333 763.2 90.133333 754.666667 98.666667L682.666667 170.666667 853.333333 341.333333 925.333333 269.333333C942.4 252.266667 942.4 222.133333 925.333333 209.333333L814.666667 98.666667C806.133333 90.133333 796 85.333333 785.333333 85.333333zM640 217.333333 85.333333 768 85.333333 938.666667 256 938.666667 806.666667 384 640 217.333333z\"></path>\n</svg>\n"
 
 /***/ }),
 /* 192 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n  <path d=\"M527.061333 166.528A277.333333 277.333333 0 0 1 1000.618667 362.666667a277.333333 277.333333 0 0 1-81.28 196.138666l-377.173334 377.173334a42.666667 42.666667 0 0 1-60.330666 0l-377.173334-377.173334a277.376 277.376 0 0 1 392.277334-392.277333l15.061333 15.061333 15.061333-15.061333z m286.72 377.173333l45.226667-45.226666a192 192 0 0 0-135.808-327.893334 192 192 0 0 0-135.808 56.32l-45.226667 45.226667a42.666667 42.666667 0 0 1-60.330666 0l-45.226667-45.226667a192.042667 192.042667 0 0 0-271.616 271.573334L512 845.482667l301.781333-301.781334z\"></path>\n</svg>\n"
+module.exports = "<svg viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n  <path d=\"M64 524C64 719.602 189.356 885.926 364.113 947.017 387.65799 953 384 936.115 384 924.767L384 847.107C248.118 863.007 242.674 773.052 233.5 758.001 215 726.501 171.5 718.501 184.5 703.501 215.5 687.501 247 707.501 283.5 761.501 309.956 800.642 361.366 794.075 387.658 787.497 393.403 763.997 405.637 743.042 422.353 726.638 281.774 701.609 223 615.67 223 513.5 223 464.053 239.322 418.406 271.465 381.627 251.142 320.928 273.421 269.19 276.337 261.415 334.458 256.131 394.888 302.993 399.549 306.685 432.663 297.835 470.341 293 512.5 293 554.924 293 592.81 297.896 626.075 306.853 637.426 298.219 693.46 258.054 747.5 262.966 750.382 270.652 772.185 321.292 753.058 381.083 785.516 417.956 802 463.809 802 513.5 802 615.874 742.99 701.953 601.803 726.786 625.381 750.003 640 782.295 640 818.008L640 930.653C640.752 939.626 640 948.664978 655.086 948.665 832.344 888.962 960 721.389 960 524 960 276.576 759.424 76 512 76 264.577 76 64 276.576 64 524Z\"></path>\n</svg>\n"
 
 /***/ }),
 /* 193 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg t=\"1512463363724\" viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n  <path d=\"M527.061333 166.528A277.333333 277.333333 0 0 1 1000.618667 362.666667a277.333333 277.333333 0 0 1-81.28 196.138666l-377.173334 377.173334a42.666667 42.666667 0 0 1-60.330666 0l-377.173334-377.173334a277.376 277.376 0 0 1 392.277334-392.277333l15.061333 15.061333 15.061333-15.061333z\"></path>\n</svg>\n"
+module.exports = "<svg viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n  <path d=\"M527.061333 166.528A277.333333 277.333333 0 0 1 1000.618667 362.666667a277.333333 277.333333 0 0 1-81.28 196.138666l-377.173334 377.173334a42.666667 42.666667 0 0 1-60.330666 0l-377.173334-377.173334a277.376 277.376 0 0 1 392.277334-392.277333l15.061333 15.061333 15.061333-15.061333z m286.72 377.173333l45.226667-45.226666a192 192 0 0 0-135.808-327.893334 192 192 0 0 0-135.808 56.32l-45.226667 45.226667a42.666667 42.666667 0 0 1-60.330666 0l-45.226667-45.226667a192.042667 192.042667 0 0 0-271.616 271.573334L512 845.482667l301.781333-301.781334z\"></path>\n</svg>\n"
 
 /***/ }),
 /* 194 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewBox=\"0 0 1332 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n  <path d=\"M529.066665 273.066666 529.066665 0 51.2 477.866666 529.066665 955.733335 529.066665 675.84C870.4 675.84 1109.333335 785.066665 1280 1024 1211.733335 682.666665 1006.933335 341.333334 529.066665 273.066666\"></path>\n</svg>\n"
+module.exports = "<svg t=\"1512463363724\" viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n  <path d=\"M527.061333 166.528A277.333333 277.333333 0 0 1 1000.618667 362.666667a277.333333 277.333333 0 0 1-81.28 196.138666l-377.173334 377.173334a42.666667 42.666667 0 0 1-60.330666 0l-377.173334-377.173334a277.376 277.376 0 0 1 392.277334-392.277333l15.061333 15.061333 15.061333-15.061333z\"></path>\n</svg>\n"
 
 /***/ }),
 /* 195 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n  <path d=\"M512 366.949535c-16.065554 0-29.982212 13.405016-29.982212 29.879884l0 359.070251c0 16.167882 13.405016 29.879884 29.982212 29.879884 15.963226 0 29.879884-13.405016 29.879884-29.879884L541.879884 396.829419C541.879884 380.763865 528.474868 366.949535 512 366.949535L512 366.949535z\"\n    p-id=\"3083\"></path>\n  <path d=\"M482.017788 287.645048c0-7.776956 3.274508-15.553912 8.80024-21.181973 5.525732-5.525732 13.302688-8.80024 21.181973-8.80024 7.776956 0 15.553912 3.274508 21.079644 8.80024 5.525732 5.62806 8.80024 13.405016 8.80024 21.181973 0 7.776956-3.274508 15.656241-8.80024 21.181973-5.525732 5.525732-13.405016 8.697911-21.079644 8.697911-7.879285 0-15.656241-3.274508-21.181973-8.697911C485.292295 303.301289 482.017788 295.524333 482.017788 287.645048L482.017788 287.645048z\"\n    p-id=\"3084\"></path>\n  <path d=\"M512 946.844409c-239.8577 0-434.895573-195.037873-434.895573-434.895573 0-239.8577 195.037873-434.895573 434.895573-434.895573 239.755371 0 434.895573 195.037873 434.895573 434.895573C946.895573 751.806535 751.755371 946.844409 512 946.844409zM512 126.17088c-212.740682 0-385.880284 173.037274-385.880284 385.777955 0 212.740682 173.037274 385.777955 385.880284 385.777955 212.740682 0 385.777955-173.037274 385.777955-385.777955C897.777955 299.208154 724.740682 126.17088 512 126.17088z\"\n    p-id=\"3085\"></path>\n</svg>\n"
+module.exports = "<svg viewBox=\"0 0 1332 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n  <path d=\"M529.066665 273.066666 529.066665 0 51.2 477.866666 529.066665 955.733335 529.066665 675.84C870.4 675.84 1109.333335 785.066665 1280 1024 1211.733335 682.666665 1006.933335 341.333334 529.066665 273.066666\"></path>\n</svg>\n"
 
 /***/ }),
 /* 196 */
+/***/ (function(module, exports) {
+
+module.exports = "<svg viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n  <path d=\"M512 366.949535c-16.065554 0-29.982212 13.405016-29.982212 29.879884l0 359.070251c0 16.167882 13.405016 29.879884 29.982212 29.879884 15.963226 0 29.879884-13.405016 29.879884-29.879884L541.879884 396.829419C541.879884 380.763865 528.474868 366.949535 512 366.949535L512 366.949535z\"\n    p-id=\"3083\"></path>\n  <path d=\"M482.017788 287.645048c0-7.776956 3.274508-15.553912 8.80024-21.181973 5.525732-5.525732 13.302688-8.80024 21.181973-8.80024 7.776956 0 15.553912 3.274508 21.079644 8.80024 5.525732 5.62806 8.80024 13.405016 8.80024 21.181973 0 7.776956-3.274508 15.656241-8.80024 21.181973-5.525732 5.525732-13.405016 8.697911-21.079644 8.697911-7.879285 0-15.656241-3.274508-21.181973-8.697911C485.292295 303.301289 482.017788 295.524333 482.017788 287.645048L482.017788 287.645048z\"\n    p-id=\"3084\"></path>\n  <path d=\"M512 946.844409c-239.8577 0-434.895573-195.037873-434.895573-434.895573 0-239.8577 195.037873-434.895573 434.895573-434.895573 239.755371 0 434.895573 195.037873 434.895573 434.895573C946.895573 751.806535 751.755371 946.844409 512 946.844409zM512 126.17088c-212.740682 0-385.880284 173.037274-385.880284 385.777955 0 212.740682 173.037274 385.777955 385.880284 385.777955 212.740682 0 385.777955-173.037274 385.777955-385.777955C897.777955 299.208154 724.740682 126.17088 512 126.17088z\"\n    p-id=\"3085\"></path>\n</svg>\n"
+
+/***/ }),
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var distanceInWords = __webpack_require__(197)
+var distanceInWords = __webpack_require__(198)
 
 /**
  * @category Common Helpers
@@ -11767,14 +11886,14 @@ module.exports = distanceInWordsToNow
 
 
 /***/ }),
-/* 197 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var compareDesc = __webpack_require__(198)
+var compareDesc = __webpack_require__(199)
 var parse = __webpack_require__(17)
-var differenceInSeconds = __webpack_require__(200)
-var differenceInMonths = __webpack_require__(202)
-var enLocale = __webpack_require__(205)
+var differenceInSeconds = __webpack_require__(201)
+var differenceInMonths = __webpack_require__(203)
+var enLocale = __webpack_require__(206)
 
 var MINUTES_IN_DAY = 1440
 var MINUTES_IN_ALMOST_TWO_DAYS = 2520
@@ -11976,7 +12095,7 @@ module.exports = distanceInWords
 
 
 /***/ }),
-/* 198 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var parse = __webpack_require__(17)
@@ -12033,7 +12152,7 @@ module.exports = compareDesc
 
 
 /***/ }),
-/* 199 */
+/* 200 */
 /***/ (function(module, exports) {
 
 /**
@@ -12059,10 +12178,10 @@ module.exports = isDate
 
 
 /***/ }),
-/* 200 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var differenceInMilliseconds = __webpack_require__(201)
+var differenceInMilliseconds = __webpack_require__(202)
 
 /**
  * @category Second Helpers
@@ -12093,7 +12212,7 @@ module.exports = differenceInSeconds
 
 
 /***/ }),
-/* 201 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var parse = __webpack_require__(17)
@@ -12128,12 +12247,12 @@ module.exports = differenceInMilliseconds
 
 
 /***/ }),
-/* 202 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var parse = __webpack_require__(17)
-var differenceInCalendarMonths = __webpack_require__(203)
-var compareAsc = __webpack_require__(204)
+var differenceInCalendarMonths = __webpack_require__(204)
+var compareAsc = __webpack_require__(205)
 
 /**
  * @category Month Helpers
@@ -12172,7 +12291,7 @@ module.exports = differenceInMonths
 
 
 /***/ }),
-/* 203 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var parse = __webpack_require__(17)
@@ -12210,7 +12329,7 @@ module.exports = differenceInCalendarMonths
 
 
 /***/ }),
-/* 204 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var parse = __webpack_require__(17)
@@ -12267,11 +12386,11 @@ module.exports = compareAsc
 
 
 /***/ }),
-/* 205 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var buildDistanceInWordsLocale = __webpack_require__(206)
-var buildFormatLocale = __webpack_require__(207)
+var buildDistanceInWordsLocale = __webpack_require__(207)
+var buildFormatLocale = __webpack_require__(208)
 
 /**
  * @category Locales
@@ -12284,7 +12403,7 @@ module.exports = {
 
 
 /***/ }),
-/* 206 */
+/* 207 */
 /***/ (function(module, exports) {
 
 function buildDistanceInWordsLocale () {
@@ -12389,10 +12508,10 @@ module.exports = buildDistanceInWordsLocale
 
 
 /***/ }),
-/* 207 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var buildFormattingTokensRegExp = __webpack_require__(208)
+var buildFormattingTokensRegExp = __webpack_require__(209)
 
 function buildFormatLocale () {
   // Note: in English, the names of days of the week and months are capitalized.
@@ -12483,7 +12602,7 @@ module.exports = buildFormatLocale
 
 
 /***/ }),
-/* 208 */
+/* 209 */
 /***/ (function(module, exports) {
 
 var commonFormatterKeys = [
@@ -12517,7 +12636,7 @@ module.exports = buildFormattingTokensRegExp
 
 
 /***/ }),
-/* 209 */
+/* 210 */
 /***/ (function(module, exports) {
 
 function buildDistanceInWordsLocale () {
@@ -12622,7 +12741,7 @@ module.exports = buildDistanceInWordsLocale
 
 
 /***/ }),
-/* 210 */
+/* 211 */
 /***/ (function(module, exports) {
 
 function buildDistanceInWordsLocale () {
@@ -12727,7 +12846,7 @@ module.exports = buildDistanceInWordsLocale
 
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports) {
 
 function buildDistanceInWordsLocale () {
@@ -12832,7 +12951,7 @@ module.exports = buildDistanceInWordsLocale
 
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports) {
 
 function buildDistanceInWordsLocale () {
@@ -12937,13 +13056,253 @@ module.exports = buildDistanceInWordsLocale
 
 
 /***/ }),
-/* 213 */
+/* 214 */
+/***/ (function(module, exports) {
+
+function declension (scheme, count) {
+  // scheme for count=1 exists
+  if (scheme.one !== undefined && count === 1) {
+    return scheme.one
+  }
+
+  var rem10 = count % 10
+  var rem100 = count % 100
+
+  // 1, 21, 31, ...
+  if (rem10 === 1 && rem100 !== 11) {
+    return scheme.singularNominative.replace('{{count}}', count)
+
+  // 2, 3, 4, 22, 23, 24, 32 ...
+  } else if ((rem10 >= 2 && rem10 <= 4) && (rem100 < 10 || rem100 > 20)) {
+    return scheme.singularGenitive.replace('{{count}}', count)
+
+  // 5, 6, 7, 8, 9, 10, 11, ...
+  } else {
+    return scheme.pluralGenitive.replace('{{count}}', count)
+  }
+}
+
+function buildLocalizeTokenFn (scheme) {
+  return function (count, options) {
+    if (options.addSuffix) {
+      if (options.comparison > 0) {
+        if (scheme.future) {
+          return declension(scheme.future, count)
+        } else {
+          return 'через ' + declension(scheme.regular, count)
+        }
+      } else {
+        if (scheme.past) {
+          return declension(scheme.past, count)
+        } else {
+          return declension(scheme.regular, count) + ' назад'
+        }
+      }
+    } else {
+      return declension(scheme.regular, count)
+    }
+  }
+}
+
+function buildDistanceInWordsLocale () {
+  var distanceInWordsLocale = {
+    lessThanXSeconds: buildLocalizeTokenFn({
+      regular: {
+        one: 'меньше секунды',
+        singularNominative: 'меньше {{count}} секунды',
+        singularGenitive: 'меньше {{count}} секунд',
+        pluralGenitive: 'меньше {{count}} секунд'
+      },
+      future: {
+        one: 'меньше, чем через секунду',
+        singularNominative: 'меньше, чем через {{count}} секунду',
+        singularGenitive: 'меньше, чем через {{count}} секунды',
+        pluralGenitive: 'меньше, чем через {{count}} секунд'
+      }
+    }),
+
+    xSeconds: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: '{{count}} секунда',
+        singularGenitive: '{{count}} секунды',
+        pluralGenitive: '{{count}} секунд'
+      },
+      past: {
+        singularNominative: '{{count}} секунду назад',
+        singularGenitive: '{{count}} секунды назад',
+        pluralGenitive: '{{count}} секунд назад'
+      },
+      future: {
+        singularNominative: 'через {{count}} секунду',
+        singularGenitive: 'через {{count}} секунды',
+        pluralGenitive: 'через {{count}} секунд'
+      }
+    }),
+
+    halfAMinute: function (_, options) {
+      if (options.addSuffix) {
+        if (options.comparison > 0) {
+          return 'через полминуты'
+        } else {
+          return 'полминуты назад'
+        }
+      }
+
+      return 'полминуты'
+    },
+
+    lessThanXMinutes: buildLocalizeTokenFn({
+      regular: {
+        one: 'меньше минуты',
+        singularNominative: 'меньше {{count}} минуты',
+        singularGenitive: 'меньше {{count}} минут',
+        pluralGenitive: 'меньше {{count}} минут'
+      },
+      future: {
+        one: 'меньше, чем через минуту',
+        singularNominative: 'меньше, чем через {{count}} минуту',
+        singularGenitive: 'меньше, чем через {{count}} минуты',
+        pluralGenitive: 'меньше, чем через {{count}} минут'
+      }
+    }),
+
+    xMinutes: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: '{{count}} минута',
+        singularGenitive: '{{count}} минуты',
+        pluralGenitive: '{{count}} минут'
+      },
+      past: {
+        singularNominative: '{{count}} минуту назад',
+        singularGenitive: '{{count}} минуты назад',
+        pluralGenitive: '{{count}} минут назад'
+      },
+      future: {
+        singularNominative: 'через {{count}} минуту',
+        singularGenitive: 'через {{count}} минуты',
+        pluralGenitive: 'через {{count}} минут'
+      }
+    }),
+
+    aboutXHours: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: 'около {{count}} часа',
+        singularGenitive: 'около {{count}} часов',
+        pluralGenitive: 'около {{count}} часов'
+      },
+      future: {
+        singularNominative: 'приблизительно через {{count}} час',
+        singularGenitive: 'приблизительно через {{count}} часа',
+        pluralGenitive: 'приблизительно через {{count}} часов'
+      }
+    }),
+
+    xHours: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: '{{count}} час',
+        singularGenitive: '{{count}} часа',
+        pluralGenitive: '{{count}} часов'
+      }
+    }),
+
+    xDays: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: '{{count}} день',
+        singularGenitive: '{{count}} дня',
+        pluralGenitive: '{{count}} дней'
+      }
+    }),
+
+    aboutXMonths: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: 'около {{count}} месяца',
+        singularGenitive: 'около {{count}} месяцев',
+        pluralGenitive: 'около {{count}} месяцев'
+      },
+      future: {
+        singularNominative: 'приблизительно через {{count}} месяц',
+        singularGenitive: 'приблизительно через {{count}} месяца',
+        pluralGenitive: 'приблизительно через {{count}} месяцев'
+      }
+    }),
+
+    xMonths: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: '{{count}} месяц',
+        singularGenitive: '{{count}} месяца',
+        pluralGenitive: '{{count}} месяцев'
+      }
+    }),
+
+    aboutXYears: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: 'около {{count}} года',
+        singularGenitive: 'около {{count}} лет',
+        pluralGenitive: 'около {{count}} лет'
+      },
+      future: {
+        singularNominative: 'приблизительно через {{count}} год',
+        singularGenitive: 'приблизительно через {{count}} года',
+        pluralGenitive: 'приблизительно через {{count}} лет'
+      }
+    }),
+
+    xYears: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: '{{count}} год',
+        singularGenitive: '{{count}} года',
+        pluralGenitive: '{{count}} лет'
+      }
+    }),
+
+    overXYears: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: 'больше {{count}} года',
+        singularGenitive: 'больше {{count}} лет',
+        pluralGenitive: 'больше {{count}} лет'
+      },
+      future: {
+        singularNominative: 'больше, чем через {{count}} год',
+        singularGenitive: 'больше, чем через {{count}} года',
+        pluralGenitive: 'больше, чем через {{count}} лет'
+      }
+    }),
+
+    almostXYears: buildLocalizeTokenFn({
+      regular: {
+        singularNominative: 'почти {{count}} год',
+        singularGenitive: 'почти {{count}} года',
+        pluralGenitive: 'почти {{count}} лет'
+      },
+      future: {
+        singularNominative: 'почти через {{count}} год',
+        singularGenitive: 'почти через {{count}} года',
+        pluralGenitive: 'почти через {{count}} лет'
+      }
+    })
+  }
+
+  function localize (token, count, options) {
+    options = options || {}
+    return distanceInWordsLocale[token](count, options)
+  }
+
+  return {
+    localize: localize
+  }
+}
+
+module.exports = buildDistanceInWordsLocale
+
+
+/***/ }),
+/* 215 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 214 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12953,11 +13312,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var GT_ACCESS_TOKEN = exports.GT_ACCESS_TOKEN = 'GT_ACCESS_TOKEN';
-var GT_VERSION = exports.GT_VERSION = "1.2.0"; // eslint-disable-line
+var GT_VERSION = exports.GT_VERSION = "1.4.0"; // eslint-disable-line
 var GT_COMMENT = exports.GT_COMMENT = 'GT_COMMENT';
 
 /***/ }),
-/* 215 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12967,7 +13326,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _toConsumableArray2 = __webpack_require__(216);
+var _toConsumableArray2 = __webpack_require__(218);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -12995,7 +13354,8 @@ function getComments(issue) {
       owner = _options.owner,
       repo = _options.repo,
       perPage = _options.perPage,
-      pagerDirection = _options.pagerDirection;
+      pagerDirection = _options.pagerDirection,
+      defaultAuthor = _options.defaultAuthor;
   var _state = this.state,
       cursor = _state.cursor,
       comments = _state.comments;
@@ -13013,13 +13373,15 @@ function getComments(issue) {
   }).then(function (res) {
     var data = res.data.data.repository.issue.comments;
     var items = data.nodes.map(function (node) {
+      var author = node.author || defaultAuthor;
+
       return {
         id: node.databaseId,
         gId: node.id,
         user: {
-          avatar_url: node.author.avatarUrl,
-          login: node.author.login,
-          html_url: node.author.url
+          avatar_url: author.avatarUrl,
+          login: author.login,
+          html_url: author.url
         },
         created_at: node.createdAt,
         body_html: node.bodyHTML,
@@ -13050,7 +13412,7 @@ function getComments(issue) {
 exports.default = getComments;
 
 /***/ }),
-/* 216 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13058,7 +13420,7 @@ exports.default = getComments;
 
 exports.__esModule = true;
 
-var _from = __webpack_require__(217);
+var _from = __webpack_require__(219);
 
 var _from2 = _interopRequireDefault(_from);
 
@@ -13077,22 +13439,22 @@ exports.default = function (arr) {
 };
 
 /***/ }),
-/* 217 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(218), __esModule: true };
+module.exports = { "default": __webpack_require__(220), __esModule: true };
 
 /***/ }),
-/* 218 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(19);
-__webpack_require__(219);
+__webpack_require__(221);
 module.exports = __webpack_require__(0).Array.from;
 
 
 /***/ }),
-/* 219 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13103,7 +13465,7 @@ var toObject = __webpack_require__(22);
 var call = __webpack_require__(60);
 var isArrayIter = __webpack_require__(61);
 var toLength = __webpack_require__(37);
-var createProperty = __webpack_require__(220);
+var createProperty = __webpack_require__(222);
 var getIterFn = __webpack_require__(42);
 
 $export($export.S + $export.F * !__webpack_require__(66)(function (iter) { Array.from(iter); }), 'Array', {
@@ -13136,7 +13498,7 @@ $export($export.S + $export.F * !__webpack_require__(66)(function (iter) { Array
 
 
 /***/ }),
-/* 220 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

@@ -31,6 +31,7 @@ class GitalkComponent extends Component {
     page: 1,
     pagerDirection: 'last',
     cursor: null,
+    previewHtml: '',
 
     isNoInit: false,
     isIniting: true,
@@ -41,6 +42,7 @@ class GitalkComponent extends Component {
     isIssueCreating: false,
     isPopupVisible: false,
     isInputFocused: false,
+    isPreview: false,
 
     isOccurError: false,
     errorMsg: '',
@@ -49,6 +51,7 @@ class GitalkComponent extends Component {
     super(props)
     this.options = Object.assign({}, {
       id: location.href,
+      number: -1,
       labels: ['Gitalk'],
       title: document.title,
       body: '', // location.href + header.meta[description]
@@ -67,6 +70,14 @@ class GitalkComponent extends Component {
       enableHotKey: true,
 
       url: location.href,
+
+      defaultAuthor: {
+        avatarUrl: '//avatars1.githubusercontent.com/u/29697133?s=50',
+        login: 'null',
+        url: '',
+      },
+
+      updateCountCallback: null
     }, props.options)
 
     this.state.pagerDirection = this.options.pagerDirection
@@ -177,24 +188,47 @@ class GitalkComponent extends Component {
       this.logout()
     })
   }
-  getIssue () {
-    const { issue } = this.state
-    if (issue) {
-      this.setState({ isNoInit: false })
-      return Promise.resolve(issue)
-    }
+  getIssueById () {
+    const { owner, repo, number, clientID, clientSecret } = this.options
+    const getUrl = `/repos/${owner}/${repo}/issues/${number}`
 
+    return new Promise((resolve, reject) => {
+      axiosGithub.get(getUrl, {
+        params: {
+          client_id: clientID,
+          client_secret: clientSecret,
+          t: Date.now()
+    }
+      })
+        .then(res => {
+          let issue = null
+
+          if (res && res.data && res.data.number === number) {
+            issue = res.data
+
+            this.setState({ issue, isNoInit: false })
+          }
+          resolve(issue)
+        })
+        .catch(err => {
+          // When the status code is 404, promise will be resolved with null
+          if (err.response.status === 404) resolve(null)
+          reject(err)
+        })
+    })
+  }
+  getIssueByLabels () {
     const { owner, repo, id, labels, clientID, clientSecret } = this.options
 
     return axiosGithub.get(`/repos/${owner}/${repo}/issues`, {
       params: {
         client_id: clientID,
         client_secret: clientSecret,
-        labels: labels.concat(id).join(',')
+        labels: labels.concat(id).join(','),
+        t: Date.now()
       }
     }).then(res => {
-      const { admin, createIssueManually } = this.options
-      const { user } = this.state
+      const { createIssueManually } = this.options
       let isNoInit = false
       let issue = null
       if (!(res && res.data && res.data.length)) {
@@ -209,6 +243,22 @@ class GitalkComponent extends Component {
       this.setState({ issue, isNoInit })
       return issue
     })
+  }
+  getIssue () {
+    const { number } = this.options
+    const { issue } = this.state
+    if (issue) {
+      this.setState({ isNoInit: false })
+      return Promise.resolve(issue)
+    }
+
+    if (typeof number === 'number' && number > 0) {
+      return this.getIssueById().then(resIssue => {
+        if (!resIssue) return this.getIssueByLabels()
+        return resIssue
+      })
+    }
+    return this.getIssueByLabels()
   }
   createIssue () {
     const { owner, repo, title, body, id, labels, url } = this.options
@@ -305,7 +355,7 @@ class GitalkComponent extends Component {
     replyCommentArray.push('')
     replyCommentArray.push('')
     if (comment) replyCommentArray.unshift('')
-    this.setState({comment: comment + replyCommentArray.join('\n')}, () => {
+    this.setState({ comment: comment + replyCommentArray.join('\n') }, () => {
       autosize.update(this.commentEL)
       this.commentEL.focus()
     })
@@ -313,7 +363,6 @@ class GitalkComponent extends Component {
   like (comment) {
     const { owner, repo } = this.options
     let { comments, user } = this.state
-
 
     axiosGithub.post(`/repos/${owner}/${repo}/issues/comments/${comment.id}/reactions`, {
       content: 'heart'
@@ -465,6 +514,26 @@ class GitalkComponent extends Component {
         })
       })
   }
+  handleCommentPreview = e => {
+    this.setState({
+      isPreview: !this.state.isPreview
+    })
+
+    axiosGithub.post('/markdown', {
+      text: this.state.comment
+    }, {
+      headers: this.accessToken && { Authorization: `token ${this.accessToken}` }
+    }).then(res => {
+      this.setState({
+        previewHtml: res.data
+      })
+    }).catch(err => {
+      this.setState({
+        isOccurError: true,
+        errorMsg: formatErrorMsg(err)
+      })
+    })
+  }
   handleCommentLoad = () => {
     const { issue, isLoadMore } = this.state
     if (isLoadMore) return
@@ -522,7 +591,7 @@ class GitalkComponent extends Component {
     )
   }
   header () {
-    const { user, comment, isCreating } = this.state
+    const { user, comment, isCreating, previewHtml, isPreview } = this.state
     return (
       <div className="gt-header" key="header">
         {user ?
@@ -534,13 +603,17 @@ class GitalkComponent extends Component {
         <div className="gt-header-comment">
           <textarea
             ref={t => { this.commentEL = t }}
-            className="gt-header-textarea"
+            className={`gt-header-textarea ${isPreview ? 'hide' : ''}`}
             value={comment}
             onChange={this.handleCommentChange}
             onFocus={this.handleCommentFocus}
             onBlur={this.handleCommentBlur}
             onKeyDown={this.handleCommentKeyDown}
             placeholder={this.i18n.t('leave-a-comment')}
+          />
+          <div
+            className={`gt-header-preview markdown-body ${isPreview ? '' : 'hide'}`}
+            dangerouslySetInnerHTML={{ __html: previewHtml }}
           />
           <div className="gt-header-controls">
             <a className="gt-header-controls-tip" href="https://guides.github.com/features/mastering-markdown/" target="_blank">
@@ -553,6 +626,13 @@ class GitalkComponent extends Component {
               text={this.i18n.t('comment')}
               isLoading={isCreating}
             />}
+
+            <Button
+              className="gt-btn-preview"
+              onMouseDown={this.handleCommentPreview}
+              text={isPreview ? this.i18n.t('edit') : this.i18n.t('preview')}
+              // isLoading={isPreviewing}
+            />
             {!user && <Button className="gt-btn-login" onMouseDown={this.handleLogin} text={this.i18n.t('login-with-github')} />}
           </div>
         </div>
@@ -569,7 +649,7 @@ class GitalkComponent extends Component {
 
     var counter = $(".gitalk-comment-count");
     if (counter && counter.attr("itemprop") == "commentCount") {
-      counter.html(window.GITALK_COMMENTS_COUNT + " Comments");
+      counter.html(window.GITALK_COMMENTS_COUNT);
     }
 
     return (
@@ -599,8 +679,19 @@ class GitalkComponent extends Component {
     const { user, issue, isPopupVisible, pagerDirection, localComments } = this.state
     const cnt = (issue && issue.comments) + localComments.length
     const isDesc = pagerDirection === 'last'
+    const { updateCountCallback } = this.options
 
     window.GITALK_COMMENTS_COUNT = cnt
+    if (
+      updateCountCallback &&
+      {}.toString.call(updateCountCallback) === '[object Function]'
+    ) {
+      try {
+        updateCountCallback(cnt)
+      } catch (err) {
+        console.log('An error occurred executing the updateCountCallback:', err)
+      }
+    }
 
     return (
       <div className="gt-meta" key="meta" >
