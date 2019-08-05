@@ -1,6 +1,6 @@
 {
   "name": "gitalk",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A comment plugin base on GitHub issues",
   "keywords": [
     "comment",
@@ -10,8 +10,9 @@
   ],
   "main": "dist/gitalk.js",
   "scripts": {
+    "prepublishOnly": "npm run build",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --no-info --progress",
-    "build": "rimraf ./dist && cross-env NODE_ENV=production webpack --hide-modules && cross-env NODE_ENV=production webpack --config webpack.config.min.js",
+    "build": "rimraf ./dist && cross-env NODE_ENV=production webpack --hide-modules && cross-env NODE_ENV=production webpack --config webpack.config.comp.js && cross-env NODE_ENV=production webpack --config webpack.config.min.js",
     "lint": "eslint src",
     "coverage": "jest --coverage",
     "test": "jest"
@@ -53,7 +54,7 @@
   },
   "dependencies": {
     "autosize": "3.0.21",
-    "axios": "0.16.2",
+    "axios": "^0.19.0",
     "date-fns": "1.28.5",
     "es6-promise": "4.1.1",
     "github-markdown-css": "2.8.0",

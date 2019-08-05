@@ -90,18 +90,18 @@ function getComments (issue) {
       const author = node.author || defaultAuthor
 
       return {
-      id: node.databaseId,
-      gId: node.id,
-      user: {
+        id: node.databaseId,
+        gId: node.id,
+        user: {
           avatar_url: author.avatarUrl,
           login: author.login,
           html_url: author.url
-      },
-      created_at: node.createdAt,
-      body_html: node.bodyHTML,
-      body: node.body,
-      html_url: `https://github.com/${owner}/${repo}/issues/${issue.number}#issuecomment-${node.databaseId}`,
-      reactions: node.reactions
+        },
+        created_at: node.createdAt,
+        body_html: node.bodyHTML,
+        body: node.body,
+        html_url: `https://github.com/${owner}/${repo}/issues/${issue.number}#issuecomment-${node.databaseId}`,
+        reactions: node.reactions
       }
     })
 

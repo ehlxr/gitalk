@@ -45,9 +45,13 @@ import Gitalk from 'gitalk'
 
 ## Usage
 
-A **GitHub Application** is needed for authorization, if you don't have one, [Click here to register](https://github.com/settings/applications/new) a new one.
+Add a container to your page:
 
-**Note:** You must specify the website domain url in the `Authorization callback URL` field.
+```html
+<div id="gitalk-container"></div>
+```
+
+Then use the Javascript code below to generate the gitalk plugin:
 
 ```js
 const gitalk = new Gitalk({
@@ -63,6 +67,9 @@ const gitalk = new Gitalk({
 gitalk.render('gitalk-container')
 ```
 
+A **GitHub Application** is needed for authorization, if you don't have one, [Click here to register](https://github.com/settings/applications/new) a new one.
+
+**Note:** You must specify the website domain url in the `Authorization callback URL` field.
 
 ## Options
 
@@ -188,9 +195,10 @@ gitalk.render('gitalk-container')
 5. Make sure your code lints (npm run lint).
 6. Commit your changes (git commit) [Commit Message Format Reference](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#-git-commit-guidelines)
 
-## Similar Project
+## Similar Projects
 
 - [gitment](https://github.com/imsun/gitment)
+- [vssue](https://vssue.js.org)
 
 ## LICENSE
 

@@ -8,20 +8,24 @@ class Gitalk {
     this.options = options
   }
 
-  render (container) {
+  render (container, callback) {
     let node = null
     container = container || this.options.container
 
     if (!container) throw new Error(`Container is required: ${container}`)
 
     if (!(container instanceof HTMLElement)) {
-      node = document.getElementById(container)
-      if (!node) throw new Error(`Container not found, document.getElementById: ${container}`)
+      node = window.document.getElementById(container)
+      if (!node) throw new Error(`Container not found, window.document.getElementById: ${container}`)
     } else {
       node = container
     }
 
-    return render(<GitalkComponent options={this.options}/>, node)
+    if (!callback) {
+      callback = () => {}
+    }
+
+    return render(<GitalkComponent options={this.options}/>, node, callback)
   }
 }
 
