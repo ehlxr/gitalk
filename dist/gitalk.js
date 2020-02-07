@@ -6566,18 +6566,22 @@ var GitalkComponent = function (_Component) {
 
     _this.getCommentsV3 = function (issue) {
       var _this$options = _this.options,
-          perPage = _this$options.perPage,
-          accessToken = _this$options.accessToken;
+          clientID = _this$options.clientID,
+          clientSecret = _this$options.clientSecret,
+          perPage = _this$options.perPage;
       var page = _this.state.page;
 
-      var token = _this.accessToken || accessToken;
+
       return _this.getIssue().then(function (issue) {
         if (!issue) return;
 
         return _util.axiosGithub.get(issue.comments_url, {
           headers: {
-            Accept: 'application/vnd.github.v3.full+json',
-            Authorization: token ? 'token ' + token : ''
+            Accept: 'application/vnd.github.v3.full+json'
+          },
+          auth: {
+            username: clientID,
+            password: clientSecret
           },
           params: {
             per_page: perPage,
@@ -6901,14 +6905,16 @@ var GitalkComponent = function (_Component) {
           owner = _options.owner,
           repo = _options.repo,
           number = _options.number,
-          accessToken = _options.accessToken;
+          clientID = _options.clientID,
+          clientSecret = _options.clientSecret;
 
       var getUrl = '/repos/' + owner + '/' + repo + '/issues/' + number;
-      var token = this.accessToken || accessToken;
+
       return new _promise2.default(function (resolve, reject) {
         _util.axiosGithub.get(getUrl, {
-          headers: {
-            Authorization: token ? 'token ' + token : ''
+          auth: {
+            username: clientID,
+            password: clientSecret
           },
           params: {
             t: Date.now()
@@ -6939,12 +6945,14 @@ var GitalkComponent = function (_Component) {
           repo = _options2.repo,
           id = _options2.id,
           labels = _options2.labels,
-          accessToken = _options2.accessToken;
+          clientID = _options2.clientID,
+          clientSecret = _options2.clientSecret;
 
-      var token = this.accessToken || accessToken;
+
       return _util.axiosGithub.get('/repos/' + owner + '/' + repo + '/issues', {
-        headers: {
-          Authorization: token ? 'token ' + token : ''
+        auth: {
+          username: clientID,
+          password: clientSecret
         },
         params: {
           labels: labels.concat(id).join(','),
