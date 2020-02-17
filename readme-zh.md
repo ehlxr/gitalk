@@ -1,7 +1,13 @@
 
 # Gitalk
 
-[![NPM][npm-version-image]][npm-version-url] [![CDNJS][cdnjs-version-image]][cdnjs-version-url] [![david-dm][david-dm-image]][david-dm-url] [![travis][travis-image]][travis-url] [![coveralls][coveralls-image]][coveralls-url] [![gzip][gzip-size]][gzip-url]
+[![NPM][npm-version-image]][npm-version-url] 
+[![CDNJS][cdnjs-version-image]][cdnjs-version-url] 
+[![jsdelivr](https://data.jsdelivr.com/v1/package/npm/gitalk/badge)](https://www.jsdelivr.com/package/npm/gitalk)
+[![david-dm][david-dm-image]][david-dm-url] 
+[![travis][travis-image]][travis-url] 
+[![coveralls][coveralls-image]][coveralls-url] 
+[![gzip-size][gzip-size]][gzip-url]
 
 Gitalk 是一個基於 GitHub Issue 和 Preact 開發的評論插件。
 
@@ -57,7 +63,6 @@ import Gitalk from 'gitalk'
 var gitalk = new Gitalk({
   clientID: 'GitHub Application Client ID',
   clientSecret: 'GitHub Application Client Secret',
-  accessToken: 'Github Personal Access Token',
   repo: 'GitHub repo',
   owner: 'GitHub repo owner',
   admin: ['GitHub repo owner and collaborators, only these guys can initialize github issues'],
@@ -69,6 +74,24 @@ gitalk.render('gitalk-container')
 ```
 
 需要 **GitHub Application**，如果沒有 [點擊這裡申請](https://github.com/settings/applications/new)，`Authorization callback URL` 填寫當前使用插件頁面的域名。
+
+### 在React使用
+
+使用以下代碼引入Gitalk組件
+
+```jsx
+import GitalkComponent from "gitalk/dist/gitalk-component";
+```
+
+按以下方式在React中使用Gitalk組件
+
+```jsx
+<GitalkComponent options={{
+  clientID: "...",
+  // ...
+  // 設置項
+}} />
+```
 
 ## 設置
 
@@ -91,10 +114,6 @@ gitalk.render('gitalk-container')
 - **admin** `Array`
 
   **必須**. GitHub repository 的所有者和合作者 (對這個 repository 有寫權限的用戶)。
-
-- **accessToken** `String`
-
-  **可選**. Github Personal Access Token. 配置 [accessToken](https://github.com/settings/tokens) 可以獲得更高的請求限制。
 
 - **id** `String`
 
@@ -189,6 +208,10 @@ gitalk.render('gitalk-container')
 
   初始化渲染並掛載插件。
 
+## TypeScript
+
+已經包括了配置項和Gitalk類的類型定義，不包括React組件的類型定義。
+
 ## 貢獻
 
 1. [Fork 代碼倉庫](https://github.com/gitalk/gitalk/fork) 並從 master 創建你的分支
@@ -217,5 +240,5 @@ MIT
 [travis-url]: https://travis-ci.org/gitalk/gitalk
 [coveralls-image]: https://img.shields.io/coveralls/gitalk/gitalk/master.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/github/gitalk/gitalk
-[gzip-size]: http://img.badgesize.io/https://unpkg.com/gitalk/dist/gitalk.min.js?compression=gzip&style=flat-square
+[gzip-size]: https://img.badgesize.io/https://unpkg.com/gitalk/dist/gitalk.min.js?compression=gzip&style=flat-square
 [gzip-url]: https://unpkg.com/gitalk/dist/gitalk.min.js
